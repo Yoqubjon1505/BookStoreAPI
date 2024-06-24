@@ -17,7 +17,7 @@ namespace BookStoreAPI.Services
             return await _bookAuthorRepository.GetBookAuthorsAsync();
         }
 
-        public async Task<BookAuthor> GetBookAuthor(int bookId, int authorId)
+        public async Task<BookAuthor> GetBookAuthor(Guid bookId, Guid authorId)
         {
             return await _bookAuthorRepository.GetBookAuthorByIdAsync(bookId, authorId);
         }
@@ -27,12 +27,12 @@ namespace BookStoreAPI.Services
             return await _bookAuthorRepository.AddBookAuthorAsync(bookAuthor);
         }
 
-        public async Task<bool> UpdateBookAuthor(int bookId, int authorId, BookAuthor bookAuthor)
+        public async Task<bool> UpdateBookAuthor(Guid bookId, Guid authorId, BookAuthor bookAuthor)
         {
             return await _bookAuthorRepository.UpdateBookAuthorAsync(bookId, authorId, bookAuthor);
         }
 
-        public async Task<bool> DeleteBookAuthor(int bookId, int authorId)
+        public async Task<bool> DeleteBookAuthor(Guid bookId, Guid authorId)
         {
             return await _bookAuthorRepository.DeleteBookAuthorAsync(bookId, authorId);
         }

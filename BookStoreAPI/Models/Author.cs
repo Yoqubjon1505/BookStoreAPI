@@ -1,9 +1,11 @@
-﻿namespace BookStoreAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace BookStoreAPI.Models
 {
-    public class Author
+    public class Author:BaseEntity 
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        
         public ICollection<BookAuthor> BookAuthors { get; set; }
 
 

@@ -17,7 +17,7 @@ namespace BookStoreAPI.Services
             return await _categoryRepository.GetCategoriesAsync();
         }
 
-        public async Task<Category> GetCategory(int id)
+        public async Task<Category> GetCategory(Guid id)
         {
             return await _categoryRepository.GetCategoryByIdAsync(id);
         }
@@ -27,12 +27,12 @@ namespace BookStoreAPI.Services
             return await _categoryRepository.AddCategoryAsync(category);
         }
 
-        public async Task<bool> UpdateCategory(int id, Category category)
+        public async Task<bool> UpdateCategory(Guid id, Category category)
         {
             return await _categoryRepository.UpdateCategoryAsync(id, category);
         }
 
-        public async Task<bool> DeleteCategory(int id)
+        public async Task<bool> DeleteCategory(Guid id)
         {
             return await _categoryRepository.DeleteCategoryAsync(id);
         }

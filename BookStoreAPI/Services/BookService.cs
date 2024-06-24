@@ -20,7 +20,7 @@ namespace BookStoreAPI.Services
             return await _bookRepository.GetBooksAsync();
         }
 
-        public async Task<Book> GetBook(int id)
+        public async Task<Book> GetBook(Guid id)
         {
             return await _bookRepository.GetBookByIdAsync(id);
         }
@@ -30,12 +30,12 @@ namespace BookStoreAPI.Services
             return await _bookRepository.AddBookAsync(book);
         }
 
-        public async Task<bool> UpdateBook(int id, Book book)
+        public async Task<bool> UpdateBook(Guid id, Book book)
         {
             return await _bookRepository.UpdateBookAsync(id, book);
         }
 
-        public async Task<bool> DeleteBook(int id)
+        public async Task<bool> DeleteBook(Guid id)
         {
             return await _bookRepository.DeleteBookAsync(id);
         }

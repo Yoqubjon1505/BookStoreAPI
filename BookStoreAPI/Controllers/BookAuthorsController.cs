@@ -24,7 +24,7 @@ namespace BookStoreAPI.Controllers
         }
 
         [HttpGet("{bookId}/{authorId}")]
-        public async Task<ActionResult<BookAuthor>> GetBookAuthor(int bookId, int authorId)
+        public async Task<ActionResult<BookAuthor>> GetBookAuthor(Guid bookId, Guid authorId)
         {
             var bookAuthor = await _bookAuthorService.GetBookAuthor(bookId, authorId);
             if (bookAuthor == null)
@@ -37,12 +37,16 @@ namespace BookStoreAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<BookAuthor>> PostBookAuthor(BookAuthor bookAuthor)
         {
+            if (ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var newBookAuthor = await _bookAuthorService.AddBookAuthor(bookAuthor);
             return CreatedAtAction(nameof(GetBookAuthor), new { bookId = newBookAuthor.BookId, authorId = newBookAuthor.AuthorId }, newBookAuthor);
         }
 
         [HttpPut("{bookId}/{authorId}")]
-        public async Task<IActionResult> PutBookAuthor(int bookId, int authorId, BookAuthor bookAuthor)
+        public async Task<IActionResult> PutBookAuthor(Guid bookId, Guid authorId, BookAuthor bookAuthor)
         {
             var result = await _bookAuthorService.UpdateBookAuthor(bookId, authorId, bookAuthor);
             if (!result)
@@ -53,7 +57,7 @@ namespace BookStoreAPI.Controllers
         }
 
         [HttpDelete("{bookId}/{authorId}")]
-        public async Task<IActionResult> DeleteBookAuthor(int bookId, int authorId)
+        public async Task<IActionResult> DeleteBookAuthor(Guid bookId, Guid authorId)
         {
             var result = await _bookAuthorService.DeleteBookAuthor(bookId, authorId);
             if (!result)
