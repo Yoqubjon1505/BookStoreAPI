@@ -8,7 +8,5 @@
         public string RefreshToken { get; set; }
         public bool IsBlocked { get; }
 
-
-
     }
 }

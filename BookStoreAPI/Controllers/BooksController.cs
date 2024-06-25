@@ -14,6 +14,7 @@ namespace BookStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly BookService _bookService;
@@ -42,7 +43,7 @@ namespace BookStoreAPI.Controllers
             }
             return book;
         }
-        [Authorize]
+        
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(BookDto book)
         {

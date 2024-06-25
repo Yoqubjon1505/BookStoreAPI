@@ -5,9 +5,11 @@ using BookStoreAPI.Mappings;
 using BookStoreAPI.Repositories;
 using BookStoreAPI.Services;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System;
 
 
@@ -32,53 +34,46 @@ namespace BookStoreAPI
             builder.Services.AddScoped<AuthorService>();
             builder.Services.AddScoped<BookAuthorService>();
             builder.Services.AddScoped<CategoryService>();
-            builder.Services.AddScoped<AuthService>();
+          //  builder.Services.AddScoped<AuthService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(c =>
+            builder.Services.AddSwaggerGen(option =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Management application APIs", Version = "v1" });
-
-                // Add the JWT Bearer authentication scheme
-                var securityScheme = new OpenApiSecurityScheme
+                option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
-                    Name = "Authorization",
-                    Description = "JWT Authorization header using the Bearer scheme.",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                };
-                c.AddSecurityDefinition("Bearer", securityScheme);
-
-                // Use the JWT Bearer authentication scheme globally
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                         { securityScheme, new List<string>() }
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
                 });
+                option.OperationFilter<SecurityRequirementsOperationFilter>();
             });
-            builder.Services.AddAutoMapper(typeof(BookMapping));
+           
+
+            builder.Services.AddDbContext<BookStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddAuthorization();
+            builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<BookStoreContext>();
+
 
             builder.Services.AddControllers()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Program>());
-           
+            builder.Services.AddAutoMapper(typeof(BookMapping));
 
             var app = builder.Build();
-          
-
+         
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.MapIdentityApi<IdentityUser>();
 
             app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthentication();
+            //app.UseRouting();
+          
+            //app.UseAuthentication();
             app.UseAuthorization();
 
 
