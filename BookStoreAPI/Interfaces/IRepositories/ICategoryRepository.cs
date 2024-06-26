@@ -5,10 +5,10 @@ namespace BookStoreAPI.Interfaces.IRepositories
     public interface ICategoryRepository
     {
         Task<IEnumerable<Category>> GetCategoriesAsync();
-        Task<Category> GetCategoryByIdAsync(int id);
+        Task<Category> GetCategoryByIdAsync(Guid id);
         Task<Category> AddCategoryAsync(Category category);
-        Task<bool> UpdateCategoryAsync(int id, Category category);
-        Task<bool> DeleteCategoryAsync(int id);
+        Task<bool> UpdateCategoryAsync(Guid id, Category category);
+        Task<bool> DeleteCategoryAsync(Guid id);
     }
 
 }

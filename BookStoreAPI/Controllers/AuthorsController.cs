@@ -24,7 +24,7 @@ namespace BookStoreAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Author>> GetAuthor(int id)
+        public async Task<ActionResult<Author>> GetAuthor(Guid id)
         {
             var author = await _authorService.GetAuthor(id);
             if (author == null)
@@ -42,7 +42,7 @@ namespace BookStoreAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAuthor(int id, Author author)
+        public async Task<IActionResult> PutAuthor(Guid id, Author author)
         {
             var result = await _authorService.UpdateAuthor(id, author);
             if (!result)
@@ -53,7 +53,7 @@ namespace BookStoreAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAuthor(int id)
+        public async Task<IActionResult> DeleteAuthor(Guid id)
         {
             var result = await _authorService.DeleteAuthor(id);
             if (!result)
