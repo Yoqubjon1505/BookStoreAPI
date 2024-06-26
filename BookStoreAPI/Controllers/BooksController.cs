@@ -1,7 +1,10 @@
-﻿using BookStoreAPI.Infrastructure;
+﻿using AutoMapper;
+using BookStoreAPI.DTOs;
+using BookStoreAPI.Infrastructure;
 using BookStoreAPI.Interfaces.IRepositories;
 using BookStoreAPI.Models;
 using BookStoreAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -14,21 +17,23 @@ namespace BookStoreAPI.Controllers
     public class BooksController : ControllerBase
     {
         private readonly BookService _bookService;
-
-        public BooksController(BookService bookService)
+        private readonly IMapper _mapper;
+        public BooksController(BookService bookService, IMapper mapper)
         {
             _bookService = bookService;
+            _mapper = mapper;   
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
         {
             var books = await _bookService.GetBooks();
-            return Ok(books);
+
+            return Ok( _mapper.Map<IEnumerable<BookDto>>(books));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Book>> GetBook(int id)
+        public async Task<ActionResult<Book>> GetBook(Guid id)
         {
             var book = await _bookService.GetBook(id);
             if (book == null)
@@ -37,18 +42,28 @@ namespace BookStoreAPI.Controllers
             }
             return book;
         }
-
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Book>> PostBook(Book book)
+        public async Task<ActionResult<Book>> PostBook(BookDto book)
         {
-            var newBook = await _bookService.AddBook(book);
+            if (ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var _book = _mapper.Map<Book>(book);
+            var newBook = await _bookService.AddBook(_book);
             return CreatedAtAction(nameof(GetBook), new { id = newBook.Id }, newBook);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook(int id, Book book)
+        public async Task<IActionResult> PutBook(Guid id, BookDto book)
         {
-            var result = await _bookService.UpdateBook(id, book);
+            if (ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+           var _book= _mapper.Map<Book>(book);
+            var result = await _bookService.UpdateBook(id, _book);
             if (!result)
             {
                 return NotFound();
@@ -57,7 +72,7 @@ namespace BookStoreAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<IActionResult> DeleteBook(Guid id)
         {
             var result = await _bookService.DeleteBook(id);
             if (!result)

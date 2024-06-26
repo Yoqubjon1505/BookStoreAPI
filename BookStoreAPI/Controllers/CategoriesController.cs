@@ -25,7 +25,7 @@ namespace BookStoreAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<ActionResult<Category>> GetCategory(Guid id)
         {
             var category = await _categoryService.GetCategory(id);
             if (category == null)
@@ -38,12 +38,16 @@ namespace BookStoreAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
+            if (ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var newCategory = await _categoryService.AddCategory(category);
             return CreatedAtAction(nameof(GetCategory), new { id = newCategory.Id }, newCategory);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        public async Task<IActionResult> PutCategory(Guid id, Category category)
         {
             var result = await _categoryService.UpdateCategory(id, category);
             if (!result)
@@ -54,7 +58,7 @@ namespace BookStoreAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCategory(Guid id)
         {
             var result = await _categoryService.DeleteCategory(id);
             if (!result)

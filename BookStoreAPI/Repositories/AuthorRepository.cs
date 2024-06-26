@@ -21,7 +21,7 @@ namespace BookStoreAPI.Repositories
                                          .ToListAsync();
         }
 
-        public async Task<Author> GetAuthorByIdAsync(int id)
+        public async Task<Author> GetAuthorByIdAsync(Guid id)
         {
             return await _context.Authors.Include(a => a.BookAuthors)
                                          .ThenInclude(ba => ba.Book)
@@ -35,7 +35,7 @@ namespace BookStoreAPI.Repositories
             return author;
         }
 
-        public async Task<bool> UpdateAuthorAsync(int id, Author author)
+        public async Task<bool> UpdateAuthorAsync(Guid id, Author author)
         {
             if (id != author.Id)
             {
@@ -63,7 +63,7 @@ namespace BookStoreAPI.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteAuthorAsync(int id)
+        public async Task<bool> DeleteAuthorAsync(Guid id)
         {
             var author = await _context.Authors.FindAsync(id);
             if (author == null)
@@ -76,7 +76,7 @@ namespace BookStoreAPI.Repositories
             return true;
         }
 
-        private bool AuthorExists(int id)
+        private bool AuthorExists(Guid id)
         {
             return _context.Authors.Any(e => e.Id == id);
         }

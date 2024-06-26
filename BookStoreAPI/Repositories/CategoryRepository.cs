@@ -19,7 +19,7 @@ namespace BookStoreAPI.Repositories
             return await _context.Categories.Include(c => c.Books).ToListAsync();
         }
 
-        public async Task<Category> GetCategoryByIdAsync(int id)
+        public async Task<Category> GetCategoryByIdAsync(Guid id)
         {
             return await _context.Categories.Include(c => c.Books).FirstOrDefaultAsync(c => c.Id == id);
         }
@@ -31,7 +31,7 @@ namespace BookStoreAPI.Repositories
             return category;
         }
 
-        public async Task<bool> UpdateCategoryAsync(int id, Category category)
+        public async Task<bool> UpdateCategoryAsync(Guid id, Category category)
         {
             if (id != category.Id)
             {
@@ -59,7 +59,7 @@ namespace BookStoreAPI.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteCategoryAsync(int id)
+        public async Task<bool> DeleteCategoryAsync(Guid id)
         {
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
@@ -72,7 +72,7 @@ namespace BookStoreAPI.Repositories
             return true;
         }
 
-        private bool CategoryExists(int id)
+        private bool CategoryExists(Guid id)
         {
             return _context.Categories.Any(e => e.Id == id);
         }
